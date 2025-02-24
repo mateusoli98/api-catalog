@@ -1,0 +1,25 @@
+Information: 0 - Application started. Press Ctrl+C to shut down.
+Information: 0 - Hosting environment: Development
+Information: 0 - Content root path: C:\projects\APICatalog\APICatalog
+Error: 0 - Erro inexperado no servidor.
+Error: 0 - Erro inexperado no servidor.
+Error: 0 - Erro inexperado no servidor.
+Error: 0 - Erro inexperado no servidor.
+Error: 0 - Erro inexperado no servidor.
+Error: 0 - Erro inexperado no servidor.
+Information: 0 - Application started. Press Ctrl+C to shut down.
+Information: 0 - Hosting environment: Development
+Information: 0 - Content root path: C:\projects\APICatalog\APICatalog
+Error: 0 - Erro inexperado no servidor.
+Information: 0 - Application started. Press Ctrl+C to shut down.
+Information: 0 - Hosting environment: Development
+Information: 0 - Content root path: C:\projects\APICatalog\APICatalog
+Error: 0 - Erro inexperado no servidor.
+Error: 0 - Erro inexperado no servidor.
+Information: 0 - Application started. Press Ctrl+C to shut down.
+Information: 0 - Hosting environment: Development
+Information: 0 - Content root path: C:\projects\APICatalog\APICatalog
+Error: 0 - Erro inexperado no servidor.
+Information: 0 - Application started. Press Ctrl+C to shut down.
+Information: 0 - Hosting environment: Development
+Information: 0 - Content root path: C:\repos\api-catolog\APICatalog\APICatalog
