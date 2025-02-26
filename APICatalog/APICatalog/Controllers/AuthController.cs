@@ -17,7 +17,7 @@ namespace APICatalog.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IConfiguration _configuration;
 
-        public AuthController(TokenService tokenService,
+        public AuthController(ITokenService tokenService,
             UserManager<ApplicationUser> userManager,
             IConfiguration configuration)
         {
@@ -81,7 +81,7 @@ namespace APICatalog.Controllers
         {
             var userExists = await _userManager.FindByNameAsync(registerModel.Email!);
 
-            if (userExists is null)
+            if (userExists is not null)
             {
                 return BadRequest("Usuário já existe");
             }
