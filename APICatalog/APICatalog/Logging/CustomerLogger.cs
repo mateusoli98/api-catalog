@@ -31,14 +31,13 @@ public class CustomerLogger : ILogger
 
     private void WriteTextInFile(string message)
     {
-        string logFilePath = @"C:\repos\api-catolog\APICatalog\APICatalog\Logging\log.txt";
+        string logFilePath = Path.Combine(Directory.GetCurrentDirectory(), "log.txt");
 
         using (StreamWriter streamWriter = new StreamWriter(logFilePath, true))
         {
             try
             {
                 streamWriter.WriteLine(message);
-                streamWriter.Close();
             }
             catch (Exception)
             {
