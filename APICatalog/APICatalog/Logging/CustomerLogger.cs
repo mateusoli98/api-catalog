@@ -31,7 +31,7 @@ public class CustomerLogger : ILogger
 
     private void WriteTextInFile(string message)
     {
-        string logFilePath = Path.Combine(Directory.GetCurrentDirectory(), "log.txt");
+        string logFilePath = Path.Combine($"{Directory.GetCurrentDirectory()}/Logging", "log.txt");
 
         using (StreamWriter streamWriter = new StreamWriter(logFilePath, true))
         {

@@ -15,15 +15,100 @@ namespace APICatalog.Controllers
     {
         private readonly ITokenService _tokenService;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IConfiguration _configuration;
+        private readonly ILogger<AuthController> _logger;
 
         public AuthController(ITokenService tokenService,
             UserManager<ApplicationUser> userManager,
-            IConfiguration configuration)
+            RoleManager<IdentityRole> roleManager,
+            IConfiguration configuration,
+            ILogger<AuthController> logger)
         {
             _tokenService = tokenService;
             _userManager = userManager;
+            _roleManager = roleManager;
             _configuration = configuration;
+            _logger = logger;
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "SuperAdminOnly")]
+        [Route("create-role")]
+        public async Task<IActionResult> CreateRole([FromBody] string roleName)
+        {
+            var roleExists = await _roleManager.RoleExistsAsync(roleName);
+            if (roleExists)
+            {
+                return StatusCode(StatusCodes.Status400BadRequest,
+                    new Response()
+                    {
+                        Status = "Error",
+                        Message = "Role already exists"
+                    });
+            }
+
+            var role = new IdentityRole(roleName);
+            var result = await _roleManager.CreateAsync(role);
+
+            if (!result.Succeeded)
+            {
+                _logger.LogInformation(2, "Role creation failed");
+                return StatusCode(
+                    StatusCodes.Status500InternalServerError,
+                    new Response()
+                    {
+                        Status = "Error",
+                        Message = "Role creation failed"
+                    });
+            }
+
+            _logger.LogInformation(1, "Role Added");
+            return Ok(new Response()
+            {
+                Status = "Success",
+                Message = "Role created successfully"
+            });
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "SuperAdminOnly")]
+        [Route("add-user-to-role")]
+        public async Task<IActionResult> AddUserToRole(string email, string roleName)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+
+            if (user is null)
+            {
+                _logger.LogInformation(2, $"User {email} not found");
+                return StatusCode(StatusCodes.Status400BadRequest,
+                    new Response()
+                    {
+                        Status = "Error",
+                        Message = "User not found"
+                    });
+            }
+
+            var result = await _userManager.AddToRoleAsync(user, roleName);
+
+            if (!result.Succeeded)
+            {
+                _logger.LogInformation(2, $"User {user.Email} creation failed");
+                return StatusCode(
+                    StatusCodes.Status500InternalServerError,
+                    new Response()
+                    {
+                        Status = "Error",
+                        Message = "User creation failed"
+                    });
+            }
+
+            _logger.LogInformation(1, $"User {user.Email} added to the {roleName} role successfully");
+            return Ok(new Response()
+            {
+                Status = "Success",
+                Message = "User added to role successfully"
+            });
         }
 
         [HttpPost("login")]
@@ -49,6 +134,7 @@ namespace APICatalog.Controllers
             {
                 new(ClaimTypes.Name, user.UserName!),
                 new(ClaimTypes.Email, user.Email!),
+                new("id", user.UserName!),
                 new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
 
@@ -157,6 +243,7 @@ namespace APICatalog.Controllers
 
         [Authorize]
         [HttpPost("revoke/{username}")]
+        [Authorize(Policy = "ExclusivePolicyOnly")]
         public async Task<IActionResult> Revoke(string username)
         {
             var user = await _userManager.FindByNameAsync(username);
@@ -171,5 +258,6 @@ namespace APICatalog.Controllers
 
             return NoContent();
         }
+
     }
 }

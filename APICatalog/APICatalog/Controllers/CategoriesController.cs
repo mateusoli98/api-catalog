@@ -100,6 +100,7 @@ public class CategoriesController : ControllerBase
     }
 
     [HttpDelete("{id:int}")]
+    [Authorize(Policy = "AdminOnly")]
     public async Task<ActionResult<CategoryDTO>> Delete([FromRoute] int id)
     {
         var category = await _unitOfWork.CategoryRepository.GetAsync(x => x.CategoryId == id);
